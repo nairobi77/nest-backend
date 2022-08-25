@@ -7,12 +7,19 @@ import { RolesModule } from "./roles/roles.module";
 import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
 import { AuthModule } from "./auth/auth.module";
+import { PostsModule } from './posts/posts.module';
+import { Post } from "./posts/posts.model";
+import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import * as path from "path";
 
 
 @Module({
     controllers: [],
     providers: [],
-    imports: [
+    imports: [ServeStaticModule.forRoot({
+        rootPath: path.resolve(__dirname, 'static'),
+    }),
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`
         }),
@@ -23,12 +30,14 @@ import { AuthModule } from "./auth/auth.module";
             username: "postgres",
             password: "root",
             database: "nest-backend",
-            models: [User, Role, UserRoles],
+            models: [User, Role, UserRoles, Post],
             autoLoadModels: true
         }),
         UsersModule,
         RolesModule,
-        AuthModule
+        AuthModule,
+        PostsModule,
+        FilesModule
     ]
 })
 export class AppModule {
